@@ -44,8 +44,6 @@ class MainDialog extends ComponentDialog {
 
     async finalStep(stepContext) {
         const userInfo = stepContext.result;
-        console.log(userInfo, 'info');
-        console.log(this.userState, 'state');
         const status = 'DONE';
         await stepContext.context.sendActivity(status);
         await this.userProfileAccessor.set(stepContext.context, userInfo);

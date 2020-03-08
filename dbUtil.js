@@ -2,8 +2,9 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const URL =
-  'mongodb://helloworld:hukZG00ak0ajoaRaAm7pzj60BsC67SLJMGkJE0gmUCFSCTeYIxgiJ68yYpgEvZrGZ39zqRHEorvKOgTbeB1wWA%3D%3D@helloworld.mongo.cosmos.azure.com:10255/?ssl=true&appName=@helloworld@';
-const uuidv4 = require('uuid/v4');
+'mongodb://helloworld1:vQFvFtlzxTuJrISzLKy5HipTrSuGdFCN7fDXs2lbBMOFfOCyqADN2eRkOy33hadyn2UEyXrrOiinZpAqKWkE2w%3D%3D@helloworld1.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@helloworld1@';
+  const uuidv4 = require('uuid/v4');
+
 class DBUtil {
   insertUser(document, callback) {
     MongoClient.connect(URL, function(err, client) {
@@ -42,6 +43,7 @@ class DBUtil {
     });
   }
 
+  //we do not need callback here
   async fetchPoliciesNew(callback) {
     const client = await MongoClient.connect(URL);
     const db = client.db("userdb");

@@ -18,7 +18,6 @@ const emailValidator = require('email-validator');
 const CREATE_ACCOUNT_DIALOG = 'CREATE_ACCOUNT_DIALOG';
 
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
-// const TEXT_PROMPT = 'TEXT_PROMPT';
 const NUMBER_PROMPT = 'NUMBER_PROMPT';
 const ATTACHMENT_PROMPT = 'ATTACHMENT_PROMPT';
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
@@ -29,6 +28,9 @@ const USER_PROFILE = 'USER_PROFILE';
 
 const { DBUtil } = require('../dbUtil');
 
+/** 
+This dialog creates a user account by asking for its details.
+**/ 
 class CreateAccountDialog extends ComponentDialog {
     constructor(userState) {
         super(CREATE_ACCOUNT_DIALOG);
@@ -48,12 +50,12 @@ class CreateAccountDialog extends ComponentDialog {
         this.addDialog(
             new WaterfallDialog(WATERFALL_DIALOG, [
                 this.nameStep.bind(this),
-                this.nameConfirmStep.bind(this),
                 this.emailStep.bind(this),
-                this.mobileStep.bind(this),
+                this.mobileNoStep.bind(this),
+                this.ageConfirmStep.bind(this),
                 this.ageStep.bind(this),
-                this.pictureStep.bind(this),
-                this.confirmStep.bind(this),
+                this.profilePictureStep.bind(this),
+                this.pictureConfirmStep.bind(this),
                 this.summaryStep.bind(this),
                 this.searchStep.bind(this)
             ])
@@ -69,7 +71,7 @@ class CreateAccountDialog extends ComponentDialog {
         );
     }
 
-    async nameConfirmStep(step) {
+    async emailStep(step) {
         step.values.name = step.result;
 
         await step.context.sendActivity(`Thanks ${ step.result }.`);
@@ -82,13 +84,13 @@ class CreateAccountDialog extends ComponentDialog {
         return await step.prompt(EMAIL_PROMPT, promptOptions);
     }
 
-    async emailStep(step) {
+    async mobileNoStep(step) {
         step.values.email = step.result;
 
         return await step.prompt(NUMBER_PROMPT, 'Enter your mobile number');
     }
 
-    async mobileStep(step) {
+    async ageConfirmStep(step) {
         step.values.contact = step.result;
 
         return await step.prompt(CONFIRM_PROMPT, 'Do you want to give your age?', [
@@ -111,7 +113,7 @@ class CreateAccountDialog extends ComponentDialog {
         }
     }
 
-    async pictureStep(step) {
+    async profilePictureStep(step) {
         step.values.age = step.result;
 
         const msg =
@@ -137,7 +139,7 @@ class CreateAccountDialog extends ComponentDialog {
         }
     }
 
-    async confirmStep(step) {
+    async pictureConfirmStep(step) {
         step.values.picture = step.result && step.result[0];
 
         return await step.prompt(CONFIRM_PROMPT, { prompt: 'Is this okay?' });

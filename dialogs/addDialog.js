@@ -1,22 +1,13 @@
 const {
-    AttachmentPrompt,
     ChoiceFactory,
     ChoicePrompt,
     ComponentDialog,
-    ConfirmPrompt,
-    DialogSet,
-    DialogTurnStatus,
-    NumberPrompt,
     TextPrompt,
     WaterfallDialog
 } = require('botbuilder-dialogs');
 const { User } = require('../user');
 
-const ATTACHMENT_PROMPT = 'ATTACHMENT_PROMPT';
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
-const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
-const EMAIL_PROMPT = 'EMAIL_PROMPT';
-const NUMBER_PROMPT = 'NUMBER_PROMPT';
 const USER_PROFILE = 'USER_PROFILE';
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 const POLICY_PROMPT = 'POLICY_PROMPT';
@@ -24,6 +15,9 @@ const ADD_DIALOG = "ADD_DIALOG";
 
 const {SearchDialog, SEARCH_DIALOG} = require("./searchDialog");
 
+/** 
+This dialog adds an existing policy to the bot.
+**/ 
 class AddDialog extends ComponentDialog {
     constructor(userState) {
         super(ADD_DIALOG);
@@ -36,9 +30,9 @@ class AddDialog extends ComponentDialog {
 
         this.addDialog(
             new WaterfallDialog(WATERFALL_DIALOG, [
-                this.addStep.bind(this),
+                this.policyTypeStep.bind(this),
                 this.policyProviderStep.bind(this),
-                this.policyStep.bind(this),
+                this.policyNumberStep.bind(this),
                 this.summaryStep.bind(this)
             ])
         );
@@ -47,7 +41,7 @@ class AddDialog extends ComponentDialog {
     }
 
 
-    async addStep(step) {
+    async policyTypeStep(step) {
         return await step.prompt(CHOICE_PROMPT, {
             prompt: 'Please select the policy type:',
             choices: ChoiceFactory.toChoices(['Life', 'Vehicle'])
@@ -73,7 +67,7 @@ class AddDialog extends ComponentDialog {
         }
     }
 
-    async policyStep(step) {
+    async policyNumberStep(step) {
         const userProfile = await this.userProfile.get(
           step.context,
           new User()
